@@ -36,11 +36,18 @@
        <span class="@pieces[i]"></span>
     }
 </div>
+<div>
+    <p>Player 1 Wins: @playerOneWins</p>
+    <p>Player 2 Wins: @playerTwoWins</p>
+</div>
 
 @code {
     
    private string[] pieces = new string[42];
     private string winnerMessage = string.Empty;
+    private int playerOneWins = 0;
+    private int playerTwoWins = 0;
+
     private string errorMessage = string.Empty;
 
     private string CurrentTurn => (winnerMessage == string.Empty) ? $"Player {State.PlayerTurn}'s Turn" : "";
@@ -60,13 +67,22 @@
         {
             errorMessage = ex.Message;
         }
-        winnerMessage = State.CheckForWin() switch
+        var winState = State.CheckForWin();
+
+        winnerMessage = winState switch
         {
             GameState.WinState.Player1_Wins => "Player 1 Wins!",
             GameState.WinState.Player2_Wins => "Player 2 Wins!",
             GameState.WinState.Tie => "It's a tie!",
             _ => ""
         };
+
+        if (winState == GameState.WinState.Player1_Wins){
+            playerOneWins++;
+        }
+        if (winState == GameState.WinState.Player2_Wins){
+            playerTwoWins++;
+        }
    }
    void ResetGame()
     {
